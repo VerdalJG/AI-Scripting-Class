@@ -8,8 +8,6 @@
 
 class MPV_PRACTICAS_API ArriveSteering : public ISteering
 {
-
-
 public:
 	virtual SteeringValues GetSteering(AActor* actor, FVector targetPosition) override;
 

@@ -13,8 +13,8 @@ SteeringValues ArriveSteering::GetSteering(AActor* actor, FVector targetPosition
 		FVector distance = (targetPosition - actor->GetActorLocation()) / 100;
 		FVector desiredVelocity = targetPosition - actor->GetActorLocation();
 
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 10000.0f, FColor::Yellow, FString::Printf(TEXT("%d"), distance.Length()));
+		//if (GEngine)
+		//	GEngine->AddOnScreenDebugMessage(-1, 10000.0f, FColor::Yellow, FString::Printf(TEXT("Distance: %d"), distance.Length()));
 
 		if (distance.Length() < character->GetParams().dest_radius)
 		{
