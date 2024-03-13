@@ -5,14 +5,11 @@
 #include "CoreMinimal.h"
 #include "ISteering.h"
 
-/**
- * 
- */
-class MPV_PRACTICAS_API SeekSteering : public ISteering
+
+class MPV_PRACTICAS_API AlignSteering : public ISteering
 {
 public:
 	virtual SteeringValues GetSteering(AActor* actor, TargetValues target) override;
-
-	SeekSteering();
-	virtual ~SeekSteering() override;
+	AlignSteering();
+	virtual ~AlignSteering();
 };

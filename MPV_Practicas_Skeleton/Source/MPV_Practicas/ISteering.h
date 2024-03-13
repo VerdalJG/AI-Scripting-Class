@@ -8,7 +8,13 @@
 struct SteeringValues
 {
 	FVector linearAcceleration = FVector::Zero();
-	FVector angularAcceleration = FVector::Zero();
+	float angularAcceleration = 0.0f;
+};
+
+struct TargetValues
+{
+	FVector targetPosition = FVector::Zero();
+	float targetRotation = 0.0f;
 };
 
 class MPV_PRACTICAS_API ISteering
@@ -16,7 +22,7 @@ class MPV_PRACTICAS_API ISteering
 public:
 	virtual ~ISteering();
 
-	virtual SteeringValues GetSteering(AActor* actor, FVector targetPosition) = 0;
+	virtual SteeringValues GetSteering(AActor* actor, TargetValues target) = 0;
 };
 
 

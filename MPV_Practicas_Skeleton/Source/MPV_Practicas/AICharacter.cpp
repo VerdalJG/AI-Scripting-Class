@@ -6,6 +6,7 @@
 #include "debug/debugdraw.h"
 
 
+
 // Sets default values
 AAICharacter::AAICharacter()
 {
@@ -20,9 +21,21 @@ void AAICharacter::BeginPlay()
 	Super::BeginPlay();
 
 	ReadParams("params.xml", m_params);
+	
+	steeringMode = SteeringMode::Align;
 
-	velocity = FVector(-100, 0, 100);
-	arrive = ArriveSteering::ArriveSteering();
+	switch (steeringMode)
+	{
+	case SteeringMode::Seek:
+		seek = SeekSteering::SeekSteering();
+		break;
+	case SteeringMode::Arrive:
+		arrive = ArriveSteering::ArriveSteering();
+		break;
+	case SteeringMode::Align:
+		align = AlignSteering::AlignSteering();
+		break;
+	}
 }
 
 // Called every frame
@@ -37,19 +50,45 @@ void AAICharacter::Tick(float DeltaTime)
 
 void AAICharacter::MoveAI(float DeltaTime)
 {
-	/*if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "[Your String Here]");
-	}*/
-
+	m_target.targetPosition = m_params.targetPosition;
+	m_target.targetRotation = m_params.targetRotation;
 
 	FVector position = GetActorLocation();
-
-	acceleration = arrive.GetSteering(this, m_params.targetPosition).linearAcceleration;
-	velocity += acceleration * DeltaTime;
-	position += velocity * DeltaTime;
+	float rotation = GetActorRotation().Pitch;
+	
+	switch (steeringMode)
+	{
+	case SteeringMode::Seek:
+		acceleration = seek.GetSteering(this, m_target).linearAcceleration;
+		velocity += acceleration * DeltaTime;
+		position += velocity * DeltaTime;
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "seek");
+		}
+		break;
+	case SteeringMode::Arrive:
+		acceleration = arrive.GetSteering(this, m_target).linearAcceleration;
+		velocity += acceleration * DeltaTime;
+		position += velocity * DeltaTime;
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "arrive");
+		}
+		break;
+	case SteeringMode::Align:
+		angularAcceleration = align.GetSteering(this, m_target).angularAcceleration;
+		angularVelocity += angularAcceleration * DeltaTime;
+		rotation += angularVelocity * DeltaTime;
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "align");
+		}
+		break;
+	}
 
 	SetActorLocation(position);
+	SetActorRotation(FRotator(rotation, 0, 0));
 }
 
 // Called to bind functionality to input

@@ -3,16 +3,18 @@
 
 #include "ArriveSteering.h"
 #include "AICharacter.h"
+#include "ExtensionFunctions.h"
 
-SteeringValues ArriveSteering::GetSteering(AActor* actor, FVector targetPosition)
+SteeringValues ArriveSteering::GetSteering(AActor* actor, TargetValues target)
 {
 	SteeringValues result;
 	if (Cast<AAICharacter>(actor))
 	{
 		AAICharacter* character = Cast<AAICharacter>(actor);
 		FVector actorLocation = actor->GetActorLocation();
-		FVector distance = (targetPosition - actorLocation) / 100;
-		FVector desiredVelocity = targetPosition - actorLocation;
+		FVector desiredVelocity = target.targetPosition - actorLocation;
+		FVector distance = desiredVelocity / 100;
+		
 
 		if (distance.Length() < character->GetParams().dest_radius)
 		{
@@ -21,7 +23,9 @@ SteeringValues ArriveSteering::GetSteering(AActor* actor, FVector targetPosition
 			{
 				lerpValue = 1;
 			}
-			desiredVelocity = LerpVector(desiredVelocity.GetSafeNormal() * character->GetParams().max_velocity, FVector::Zero(), lerpValue);
+			FVector startVelocity = desiredVelocity.GetSafeNormal() * character->GetParams().max_velocity;
+			FVector endVelocity = FVector::Zero();
+			desiredVelocity = ExtensionFunctions::LerpVector(startVelocity, endVelocity, lerpValue);
 			FVector desiredAcceleration = desiredVelocity - character->velocity;
 			result.linearAcceleration = desiredAcceleration;
 		}
@@ -34,15 +38,6 @@ SteeringValues ArriveSteering::GetSteering(AActor* actor, FVector targetPosition
 			result.linearAcceleration = desiredAcceleration;
 		}
 	}
-	return result;
-}
-
-FVector ArriveSteering::LerpVector(FVector A, FVector B, double t)
-{
-	FVector result;
-	result.X = FMath::Lerp(A.X, B.X, t);
-	result.Y = FMath::Lerp(A.Y, B.Y, t);
-	result.Z = FMath::Lerp(A.Z, B.Z, t);
 	return result;
 }
 

@@ -4,14 +4,14 @@
 #include "SeekSteering.h"
 #include "AICharacter.h"
 
-SteeringValues SeekSteering::GetSteering(AActor* actor, FVector targetPosition)
+SteeringValues SeekSteering::GetSteering(AActor* actor, TargetValues target)
 {
 	SteeringValues result;
 	if (Cast<AAICharacter>(actor))
 	{
 		AAICharacter* character = Cast<AAICharacter>(actor);
 		FVector actorLocation = actor->GetActorLocation();
-		FVector desiredVelocity = targetPosition - actorLocation;
+		FVector desiredVelocity = target.targetPosition - actorLocation;
 		desiredVelocity = desiredVelocity.GetSafeNormal() * character->GetParams().max_velocity;
 		
 		FVector desiredAcceleration = desiredVelocity - character->velocity;

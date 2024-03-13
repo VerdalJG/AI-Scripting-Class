@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "SeekSteering.h"
 #include "ArriveSteering.h"
+#include "AlignSteering.h"
 
 #include "AICharacter.generated.h"
 
@@ -26,12 +27,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AIChar)
 	AActor* circle;
-
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	Params m_params;
+	TargetValues m_target;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -52,8 +54,20 @@ public:
 
 	FVector velocity;
 	FVector acceleration;
+	float angularVelocity;
+	float angularAcceleration;
+
+	enum class SteeringMode
+	{
+		Seek,
+		Arrive,
+		Align
+	};
+
 
 private:
+	SteeringMode steeringMode;
 	SeekSteering seek;
 	ArriveSteering arrive;
+	AlignSteering align;
 };
