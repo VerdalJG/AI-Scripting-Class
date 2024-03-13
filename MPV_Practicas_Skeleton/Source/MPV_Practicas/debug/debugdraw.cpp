@@ -88,7 +88,7 @@ void SetCircle(const AActor* owner, const FString& circle_name, const FVector& p
 
 
     // Calculate scale from radius
-    float newscale = radius / 100.0f;
+    float newscale = (radius * 2) / 100.0f;
     circle_actor->SetActorScale3D(FVector(newscale, newscale, newscale));
 }
 
