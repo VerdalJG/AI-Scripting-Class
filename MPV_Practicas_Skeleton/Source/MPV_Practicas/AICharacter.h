@@ -54,6 +54,7 @@ public:
 
 	FVector velocity;
 	FVector acceleration;
+	float rotation;
 	float angularVelocity;
 	float angularAcceleration;
 

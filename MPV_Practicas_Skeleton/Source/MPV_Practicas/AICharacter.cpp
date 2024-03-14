@@ -10,7 +10,7 @@
 // Sets default values
 AAICharacter::AAICharacter()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
@@ -21,21 +21,12 @@ void AAICharacter::BeginPlay()
 	Super::BeginPlay();
 
 	ReadParams("params.xml", m_params);
-	
+
 	steeringMode = SteeringMode::Align;
 
-	switch (steeringMode)
-	{
-	case SteeringMode::Seek:
-		seek = SeekSteering::SeekSteering();
-		break;
-	case SteeringMode::Arrive:
-		arrive = ArriveSteering::ArriveSteering();
-		break;
-	case SteeringMode::Align:
-		align = AlignSteering::AlignSteering();
-		break;
-	}
+	seek = SeekSteering::SeekSteering();
+	arrive = ArriveSteering::ArriveSteering();
+	align = AlignSteering::AlignSteering();
 }
 
 // Called every frame
@@ -54,41 +45,36 @@ void AAICharacter::MoveAI(float DeltaTime)
 	m_target.targetRotation = m_params.targetRotation;
 
 	FVector position = GetActorLocation();
-	float rotation = GetActorRotation().Pitch;
-	
+
+
 	switch (steeringMode)
 	{
 	case SteeringMode::Seek:
 		acceleration = seek.GetSteering(this, m_target).linearAcceleration;
 		velocity += acceleration * DeltaTime;
 		position += velocity * DeltaTime;
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "seek");
-		}
 		break;
 	case SteeringMode::Arrive:
 		acceleration = arrive.GetSteering(this, m_target).linearAcceleration;
 		velocity += acceleration * DeltaTime;
 		position += velocity * DeltaTime;
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "arrive");
-		}
 		break;
 	case SteeringMode::Align:
 		angularAcceleration = align.GetSteering(this, m_target).angularAcceleration;
 		angularVelocity += angularAcceleration * DeltaTime;
 		rotation += angularVelocity * DeltaTime;
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "align");
-		}
 		break;
 	}
+	FVector rotationVector = FVector(0, rotation, 0);
+	FRotator rotationRotator = FRotator::MakeFromEuler(rotationVector);
+
+	/*if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("Rotation: %f"), rotation));
+	}*/
 
 	SetActorLocation(position);
-	SetActorRotation(FRotator(rotation, 0, 0));
+	SetActorRotation(rotationRotator);
 }
 
 // Called to bind functionality to input

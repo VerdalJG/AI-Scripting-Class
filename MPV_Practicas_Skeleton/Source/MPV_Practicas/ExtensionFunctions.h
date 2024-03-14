@@ -11,6 +11,7 @@ static class MPV_PRACTICAS_API ExtensionFunctions
 {
 public:
 	static FVector LerpVector(FVector A, FVector B, double t);
+	static float ConvertTo360Angle(float angle);
 	ExtensionFunctions();
 	~ExtensionFunctions();
 };

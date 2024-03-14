@@ -12,7 +12,19 @@ SteeringValues AlignSteering::GetSteering(AActor* actor, TargetValues target)
 	{
 		AAICharacter* character = Cast<AAICharacter>(actor);
 		float desiredAngle = character->GetParams().targetRotation;
-		float desiredAngularVelocity = (desiredAngle - character->GetActorRotation().Pitch) * character->GetParams().max_angular_velocity;
+
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("desiredAng: %f"), desiredAngle));
+		}
+
+		float desiredAngularVelocity = (desiredAngle - character->rotation) * character->GetParams().max_angular_velocity;
+
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("desiredVel: %f"), desiredAngularVelocity));
+		}
+
 		float desiredAngularAcceleration = desiredAngularVelocity - character->angularVelocity;
 		result.angularAcceleration = desiredAngularAcceleration * character->GetParams().max_angular_acceleration;
 	}
