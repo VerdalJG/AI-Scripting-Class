@@ -21,7 +21,7 @@ SteeringValues AlignSteering::GetSteering(AActor* actor, TargetValues target)
 		if (fabs(diff) <= character->GetParams().angular_arrive_radius)
 		{
 			// Approaching target angle
-			float lerpValue = fabs(diff) / character->GetParams().angular_arrive_radius;
+			float lerpValue = 1 - fabs(diff) / character->GetParams().angular_arrive_radius;
 			desiredAngularVelocity = FMath::Lerp(character->GetParams().max_angular_velocity, 0.0f, lerpValue) * ExtensionFunctions::Sign(diff);
 
 			if (lerpValue > 0.99f)
@@ -29,13 +29,8 @@ SteeringValues AlignSteering::GetSteering(AActor* actor, TargetValues target)
 				lerpValue = 1;
 			}
 
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("desiredAngularVelocity: %f"), desiredAngularVelocity));
-			}
-
 			desiredAngularAcceleration = desiredAngularVelocity - character->angularVelocity;
-			result.angularAcceleration = desiredAngularAcceleration;
+			result.angularAcceleration = desiredAngularAcceleration * 10;
 		}
 		else
 		{
