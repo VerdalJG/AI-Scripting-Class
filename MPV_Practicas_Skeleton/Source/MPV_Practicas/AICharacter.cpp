@@ -34,9 +34,8 @@ void AAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	DrawDebug();
-
 	MoveAI(DeltaTime);
+	DrawDebug();
 }
 
 void AAICharacter::MoveAI(float DeltaTime)
@@ -62,16 +61,20 @@ void AAICharacter::MoveAI(float DeltaTime)
 	case SteeringMode::Align:
 		angularAcceleration = align.GetSteering(this, m_target).angularAcceleration;
 		angularVelocity += angularAcceleration * DeltaTime;
+		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
+
+		/*if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("AngularVelocity: %f"), angularVelocity));
+		}*/
+
 		rotation += angularVelocity * DeltaTime;
 		break;
 	}
 	FVector rotationVector = FVector(0, rotation, 0);
 	FRotator rotationRotator = FRotator::MakeFromEuler(rotationVector);
 
-	/*if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("Rotation: %f"), rotation));
-	}*/
+	
 
 	SetActorLocation(position);
 	SetActorRotation(rotationRotator);
@@ -92,6 +95,10 @@ void AAICharacter::OnClickedLeft(const FVector& mousePosition)
 void AAICharacter::OnClickedRight(const FVector& mousePosition)
 {
 	m_params.targetPosition = mousePosition;
+
+	FVector dir = (mousePosition - GetActorLocation()).GetSafeNormal();
+	float angle = FMath::RadiansToDegrees(atan2(dir.Z, dir.X));
+	m_params.targetRotation = angle;
 }
 
 void AAICharacter::DrawDebug()
@@ -99,4 +106,6 @@ void AAICharacter::DrawDebug()
 	SetCircle(circle, TEXT("targetPosition"), m_params.targetPosition, m_params.dest_radius * 100);
 	SetArrow(this, TEXT("linear_acceleration"), acceleration, acceleration.Length());
 	SetArrow(this, TEXT("linear_velocity"), velocity, velocity.Length());
+	FVector dir(cos(FMath::DegreesToRadians(m_params.targetRotation)), 0.0f, sin(FMath::DegreesToRadians(m_params.targetRotation)));
+	SetArrow(this, TEXT("target_rotation"), dir, 80.0f);
 }

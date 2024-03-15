@@ -12,7 +12,7 @@ FVector ExtensionFunctions::LerpVector(FVector A, FVector B, double t)
 	return result;
 }
 
-float ExtensionFunctions::ConvertTo360Angle(float angle)
+float ExtensionFunctions::ConvertTo360(float angle)
 {
 	if (angle < 0)
 	{
@@ -26,6 +26,22 @@ float ExtensionFunctions::ConvertTo360Angle(float angle)
 	}
 
 	return angle;
+}
+
+float ExtensionFunctions::ConvertTo180(float angle)
+{
+	angle = ConvertTo360(angle);
+
+	if (angle > 180)
+	{
+		angle -= 360;
+	}
+	return angle;
+}
+
+float ExtensionFunctions::Sign(float n)
+{
+	return n >= 0.0f ? 1.0f : -1.0f;
 }
 
 ExtensionFunctions::ExtensionFunctions()
