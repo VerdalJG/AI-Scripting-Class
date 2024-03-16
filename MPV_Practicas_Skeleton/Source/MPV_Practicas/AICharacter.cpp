@@ -22,11 +22,12 @@ void AAICharacter::BeginPlay()
 
 	ReadParams("params.xml", m_params);
 
-	steeringMode = SteeringMode::Align;
+	steeringMode = SteeringMode::AlignToMovement;
 
 	seek = SeekSteering::SeekSteering();
 	arrive = ArriveSteering::ArriveSteering();
 	align = AlignSteering::AlignSteering();
+	alignToMovement = AlignToMovementSteering::AlignToMovementSteering();
 }
 
 // Called every frame
@@ -62,12 +63,15 @@ void AAICharacter::MoveAI(float DeltaTime)
 		angularAcceleration = align.GetSteering(this, m_target).angularAcceleration;
 		angularVelocity += angularAcceleration * DeltaTime;
 		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
-
-		/*if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("AngularVelocity: %f"), angularVelocity));
-		}*/
-
+		rotation += angularVelocity * DeltaTime;
+		break;
+	case SteeringMode::AlignToMovement:
+		acceleration = arrive.GetSteering(this, m_target).linearAcceleration;
+		velocity += acceleration * DeltaTime;
+		position += velocity * DeltaTime;
+		angularAcceleration = alignToMovement.GetSteering(this, m_target).angularAcceleration;
+		angularVelocity += angularAcceleration * DeltaTime;
+		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
 		rotation += angularVelocity * DeltaTime;
 		break;
 	}

@@ -9,6 +9,7 @@
 #include "SeekSteering.h"
 #include "ArriveSteering.h"
 #include "AlignSteering.h"
+#include "AlignToMovementSteering.h"
 
 #include "AICharacter.generated.h"
 
@@ -21,7 +22,7 @@ public:
 	// Sets default values for this pawn's properties
 	AAICharacter();
 
-	/**  */
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AIChar)
 	uint32 bDoMovement : 1;
 
@@ -62,7 +63,8 @@ public:
 	{
 		Seek,
 		Arrive,
-		Align
+		Align,
+		AlignToMovement
 	};
 
 
@@ -71,4 +73,5 @@ private:
 	SeekSteering seek;
 	ArriveSteering arrive;
 	AlignSteering align;
+	AlignToMovementSteering alignToMovement;
 };
