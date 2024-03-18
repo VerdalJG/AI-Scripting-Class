@@ -46,7 +46,6 @@ void AAICharacter::MoveAI(float DeltaTime)
 
 	FVector position = GetActorLocation();
 
-
 	switch (steeringMode)
 	{
 	case SteeringMode::Seek:
@@ -61,27 +60,28 @@ void AAICharacter::MoveAI(float DeltaTime)
 		break;
 	case SteeringMode::Align:
 		angularAcceleration = align.GetSteering(this, m_target).angularAcceleration;
+		angularAcceleration = FMath::Clamp(angularAcceleration, -m_params.max_angular_acceleration, m_params.max_angular_acceleration);
 		angularVelocity += angularAcceleration * DeltaTime;
 		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
 		rotation += angularVelocity * DeltaTime;
 		break;
 	case SteeringMode::AlignToMovement:
-		acceleration = arrive.GetSteering(this, m_target).linearAcceleration;
+		acceleration = alignToMovement.GetSteering(this, m_target).linearAcceleration;
 		velocity += acceleration * DeltaTime;
 		position += velocity * DeltaTime;
 		angularAcceleration = alignToMovement.GetSteering(this, m_target).angularAcceleration;
+		angularAcceleration = FMath::Clamp(angularAcceleration, -m_params.max_angular_acceleration, m_params.max_angular_acceleration);
 		angularVelocity += angularAcceleration * DeltaTime;
 		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
 		rotation += angularVelocity * DeltaTime;
 		break;
 	}
-	FVector rotationVector = FVector(0, rotation, 0);
-	FRotator rotationRotator = FRotator::MakeFromEuler(rotationVector);
 
-	
+	FVector rotationVector = FVector(0, rotation, 0);
+	FRotator rotator = FRotator::MakeFromEuler(rotationVector);
 
 	SetActorLocation(position);
-	SetActorRotation(rotationRotator);
+	SetActorRotation(rotator);
 }
 
 // Called to bind functionality to input
@@ -107,9 +107,27 @@ void AAICharacter::OnClickedRight(const FVector& mousePosition)
 
 void AAICharacter::DrawDebug()
 {
+	TArray<FVector> Points =
+	{
+		FVector(0.f, 0.f, 0.f),
+		FVector(100.f, 0.f, 0.f),
+		FVector(100.f, 0.f, 100.f),
+		FVector(100.f, 0.f, 100.f),
+		FVector(0.f, 0.f, 100.f)
+	};
+
+	SetPath(this, TEXT("follow_path"), TEXT("path"), Points, 5.0f, PathMaterial);
+
 	SetCircle(circle, TEXT("targetPosition"), m_params.targetPosition, m_params.dest_radius * 100);
 	SetArrow(this, TEXT("linear_acceleration"), acceleration, acceleration.Length());
 	SetArrow(this, TEXT("linear_velocity"), velocity, velocity.Length());
+
 	FVector dir(cos(FMath::DegreesToRadians(m_params.targetRotation)), 0.0f, sin(FMath::DegreesToRadians(m_params.targetRotation)));
 	SetArrow(this, TEXT("target_rotation"), dir, 80.0f);
+
+	TArray<TArray<FVector>> Polygons = {
+		{ FVector(0.f, 0.f, 0.f), FVector(100.f, 0.f, 0.f), FVector(100.f, 0.f, 100.0f), FVector(0.f, 0.f, 100.0f) },
+		{ FVector(100.f, 0.f, 0.f), FVector(200.f, 0.f, 0.f), FVector(200.f, 0.f, 100.0f) }
+	};
+	SetPolygons(this, TEXT("navmesh"), TEXT("mesh"), Polygons, NavmeshMaterial);
 }

@@ -35,6 +35,7 @@ protected:
 
 	Params m_params;
 	TargetValues m_target;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

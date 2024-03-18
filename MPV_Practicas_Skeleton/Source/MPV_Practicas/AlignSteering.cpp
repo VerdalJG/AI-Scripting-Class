@@ -12,9 +12,9 @@ SteeringValues AlignSteering::GetSteering(AActor* actor, TargetValues target)
 	if (Cast<AAICharacter>(actor))
 	{
 		AAICharacter* character = Cast<AAICharacter>(actor);
-		float desiredAngle = ExtensionFunctions::ConvertTo360(character->GetParams().targetRotation);
-		float currentRotation = ExtensionFunctions::ConvertTo360(character->rotation);
-		float diff = ExtensionFunctions::ConvertTo180(desiredAngle - currentRotation);
+		float desiredAngle = ConvertTo360(character->GetParams().targetRotation);
+		float currentRotation = ConvertTo360(character->rotation);
+		float diff = ConvertTo180(desiredAngle - currentRotation);
 		float desiredAngularVelocity;
 		float desiredAngularAcceleration;
 
@@ -22,7 +22,7 @@ SteeringValues AlignSteering::GetSteering(AActor* actor, TargetValues target)
 		{
 			// Approaching target angle
 			float lerpValue = 1 - fabs(diff) / character->GetParams().angular_arrive_radius;
-			desiredAngularVelocity = FMath::Lerp(character->GetParams().max_angular_velocity, 0.0f, lerpValue) * ExtensionFunctions::Sign(diff);
+			desiredAngularVelocity = FMath::Lerp(character->GetParams().max_angular_velocity, 0.0f, lerpValue) * Sign(diff);
 
 			if (lerpValue > 0.99f)
 			{
@@ -35,12 +35,10 @@ SteeringValues AlignSteering::GetSteering(AActor* actor, TargetValues target)
 		else
 		{
 			// Away from target angle
-			desiredAngularAcceleration = character->GetParams().max_angular_acceleration * ExtensionFunctions::Sign(diff);
+			desiredAngularAcceleration = character->GetParams().max_angular_acceleration * Sign(diff);
 			result.angularAcceleration = desiredAngularAcceleration;
 		}
 	}
-
-
 
 	return result;
 }

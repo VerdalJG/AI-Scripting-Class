@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ISteering.h"
 #include "AlignSteering.h"
+#include "ArriveSteering.h"
 
 /**
  * 
@@ -17,5 +18,6 @@ public:
 	~AlignToMovementSteering();
 
 private:
+	ArriveSteering arrive;
 	AlignSteering align;
 };

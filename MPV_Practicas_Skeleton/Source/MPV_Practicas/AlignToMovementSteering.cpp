@@ -10,15 +10,20 @@
 SteeringValues AlignToMovementSteering::GetSteering(AActor* actor, TargetValues target)
 {
 	SteeringValues result;
+	arrive = ArriveSteering::ArriveSteering();
 	align = AlignSteering::AlignSteering();
 
 	if (Cast<AAICharacter>(actor))
 	{
 		AAICharacter* character = Cast<AAICharacter>(actor);
 
+		FVector acceleration = arrive.GetSteering(actor, target).linearAcceleration;
+		result.linearAcceleration = acceleration;
+
 		FVector dir = (character->velocity.GetSafeNormal());
 		float angle = FMath::RadiansToDegrees(atan2(dir.Z, dir.X));
 		target.targetRotation = angle;
+
 		float angularAcceleration = align.GetSteering(actor, target).angularAcceleration;
 		result.angularAcceleration = angularAcceleration;
 	}

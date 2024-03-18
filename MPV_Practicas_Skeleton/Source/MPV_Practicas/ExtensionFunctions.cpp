@@ -1,9 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "ExtensionFunctions.h"
 
-FVector ExtensionFunctions::LerpVector(FVector A, FVector B, double t)
+FVector LerpVector(FVector A, FVector B, double t)
 {
 	FVector result;
 	result.X = FMath::Lerp(A.X, B.X, t);
@@ -12,7 +9,7 @@ FVector ExtensionFunctions::LerpVector(FVector A, FVector B, double t)
 	return result;
 }
 
-float ExtensionFunctions::ConvertTo360(float angle)
+float ConvertTo360(float angle)
 {
 	if (angle < 0)
 	{
@@ -22,13 +19,13 @@ float ExtensionFunctions::ConvertTo360(float angle)
 	else if (angle > 0)
 	{
 		int n = static_cast<int>(angle / 360);
-		angle -= (360 * n);
+		angle -= 360 * n;
 	}
 
 	return angle;
 }
 
-float ExtensionFunctions::ConvertTo180(float angle)
+float ConvertTo180(float angle)
 {
 	angle = ConvertTo360(angle);
 
@@ -39,15 +36,14 @@ float ExtensionFunctions::ConvertTo180(float angle)
 	return angle;
 }
 
-float ExtensionFunctions::Sign(float n)
+float Sign(float n)
 {
-	return n >= 0.0f ? 1.0f : -1.0f;
-}
-
-ExtensionFunctions::ExtensionFunctions()
-{
-}
-
-ExtensionFunctions::~ExtensionFunctions()
-{
+	if (n == 0.0f)
+	{
+		return 0.0f;
+	}
+	else
+	{
+		return n > 0.0f ? 1.0f : -1.0f;
+	}
 }

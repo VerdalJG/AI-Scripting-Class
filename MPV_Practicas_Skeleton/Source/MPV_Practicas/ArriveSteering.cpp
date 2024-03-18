@@ -25,7 +25,7 @@ SteeringValues ArriveSteering::GetSteering(AActor* actor, TargetValues target)
 			}
 			FVector startVelocity = desiredVelocity.GetSafeNormal() * character->GetParams().max_velocity;
 			FVector endVelocity = FVector::Zero();
-			desiredVelocity = ExtensionFunctions::LerpVector(startVelocity, endVelocity, lerpValue);
+			desiredVelocity = LerpVector(startVelocity, endVelocity, lerpValue);
 			FVector desiredAcceleration = desiredVelocity - character->velocity;
 			result.linearAcceleration = desiredAcceleration;
 		}
@@ -43,10 +43,6 @@ SteeringValues ArriveSteering::GetSteering(AActor* actor, TargetValues target)
 
 ArriveSteering::ArriveSteering()
 {
-	/*if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "[Your String Here]");
-			}*/
 }
 
 ArriveSteering::~ArriveSteering()
