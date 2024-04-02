@@ -51,11 +51,13 @@ void AAICharacter::MoveAI(float DeltaTime)
 	case SteeringMode::Seek:
 		acceleration = seek.GetSteering(this, m_target).linearAcceleration;
 		velocity += acceleration * DeltaTime;
+		velocity.GetClampedToMaxSize(m_params.max_velocity);
 		position += velocity * DeltaTime;
 		break;
 	case SteeringMode::Arrive:
 		acceleration = arrive.GetSteering(this, m_target).linearAcceleration;
 		velocity += acceleration * DeltaTime;
+		velocity.GetClampedToMaxSize(m_params.max_velocity);
 		position += velocity * DeltaTime;
 		break;
 	case SteeringMode::Align:
@@ -66,10 +68,13 @@ void AAICharacter::MoveAI(float DeltaTime)
 		rotation += angularVelocity * DeltaTime;
 		break;
 	case SteeringMode::AlignToMovement:
-		acceleration = alignToMovement.GetSteering(this, m_target).linearAcceleration;
+		SteeringValues a = alignToMovement.GetSteering(this, m_target);
+		acceleration = a.linearAcceleration;
 		velocity += acceleration * DeltaTime;
+		velocity.GetClampedToMaxSize(m_params.max_velocity);
 		position += velocity * DeltaTime;
-		angularAcceleration = alignToMovement.GetSteering(this, m_target).angularAcceleration;
+
+		angularAcceleration = a.angularAcceleration;
 		angularAcceleration = FMath::Clamp(angularAcceleration, -m_params.max_angular_acceleration, m_params.max_angular_acceleration);
 		angularVelocity += angularAcceleration * DeltaTime;
 		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
@@ -116,9 +121,9 @@ void AAICharacter::DrawDebug()
 		FVector(0.f, 0.f, 100.f)
 	};
 
-	SetPath(this, TEXT("follow_path"), TEXT("path"), Points, 5.0f, PathMaterial);
+	SetPath(this, TEXT("BP_Path"), TEXT("path"), Points, 5.0f, PathMaterial);
 
-	SetCircle(circle, TEXT("targetPosition"), m_params.targetPosition, m_params.dest_radius * 100);
+	SetCircle(circle, TEXT("targetPosition"), m_params.targetPosition, m_params.dest_radius);
 	SetArrow(this, TEXT("linear_acceleration"), acceleration, acceleration.Length());
 	SetArrow(this, TEXT("linear_velocity"), velocity, velocity.Length());
 
@@ -129,5 +134,5 @@ void AAICharacter::DrawDebug()
 		{ FVector(0.f, 0.f, 0.f), FVector(100.f, 0.f, 0.f), FVector(100.f, 0.f, 100.0f), FVector(0.f, 0.f, 100.0f) },
 		{ FVector(100.f, 0.f, 0.f), FVector(200.f, 0.f, 0.f), FVector(200.f, 0.f, 100.0f) }
 	};
-	SetPolygons(this, TEXT("navmesh"), TEXT("mesh"), Polygons, NavmeshMaterial);
+	SetPolygons(this, TEXT("BP_Navmesh"), TEXT("mesh"), Polygons, NavmeshMaterial);
 }

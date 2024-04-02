@@ -11,7 +11,10 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"XmlParser",
-				"UnrealEd"
+				"UnrealEd",
+				"ProceduralMeshComponent",
+				"Paper2D",
+				"GeometryCore"
 			]
 		}
 	],

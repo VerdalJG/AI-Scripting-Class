@@ -22,22 +22,21 @@ SteeringValues AlignSteering::GetSteering(AActor* actor, TargetValues target)
 		{
 			// Approaching target angle
 			float lerpValue = 1 - fabs(diff) / character->GetParams().angular_arrive_radius;
-			desiredAngularVelocity = FMath::Lerp(character->GetParams().max_angular_velocity, 0.0f, lerpValue) * Sign(diff);
 
 			if (lerpValue > 0.99f)
 			{
 				lerpValue = 1;
 			}
 
-			desiredAngularAcceleration = desiredAngularVelocity - character->angularVelocity;
-			result.angularAcceleration = desiredAngularAcceleration * 10;
+			desiredAngularVelocity = FMath::Lerp(character->GetParams().max_angular_velocity, 0.0f, lerpValue) * Sign(diff);
+
+			diff = desiredAngularVelocity - character->angularVelocity;
 		}
-		else
-		{
+
 			// Away from target angle
 			desiredAngularAcceleration = character->GetParams().max_angular_acceleration * Sign(diff);
 			result.angularAcceleration = desiredAngularAcceleration;
-		}
+
 	}
 
 	return result;

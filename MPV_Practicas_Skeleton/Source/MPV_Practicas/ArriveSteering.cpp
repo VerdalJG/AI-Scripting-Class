@@ -13,7 +13,7 @@ SteeringValues ArriveSteering::GetSteering(AActor* actor, TargetValues target)
 		AAICharacter* character = Cast<AAICharacter>(actor);
 		FVector actorLocation = actor->GetActorLocation();
 		FVector desiredVelocity = target.targetPosition - actorLocation;
-		FVector distance = desiredVelocity / 100;
+		FVector distance = desiredVelocity;
 		
 
 		if (distance.Length() < character->GetParams().dest_radius)
@@ -27,6 +27,7 @@ SteeringValues ArriveSteering::GetSteering(AActor* actor, TargetValues target)
 			FVector endVelocity = FVector::Zero();
 			desiredVelocity = LerpVector(startVelocity, endVelocity, lerpValue);
 			FVector desiredAcceleration = desiredVelocity - character->velocity;
+			desiredAcceleration = desiredAcceleration.GetSafeNormal() * character->GetParams().max_acceleration;
 			result.linearAcceleration = desiredAcceleration;
 		}
 

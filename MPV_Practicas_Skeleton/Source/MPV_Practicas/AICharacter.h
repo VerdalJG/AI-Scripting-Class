@@ -28,6 +28,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AIChar)
 	AActor* circle;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* PathMaterial;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* NavmeshMaterial;
 	
 protected:
 	// Called when the game starts or when spawned
