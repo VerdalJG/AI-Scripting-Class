@@ -15,3 +15,7 @@ public:
 	PathSteering();
 	virtual ~PathSteering() override;
 };
+
+/*
+   Link: https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+*/

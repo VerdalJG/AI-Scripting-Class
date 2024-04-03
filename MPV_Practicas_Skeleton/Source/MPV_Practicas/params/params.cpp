@@ -98,3 +98,44 @@ bool ReadParams(const char* filename, Params& params)
 	}
 	return true;
 }
+
+bool ReadPath(const char* filename, Path& path)
+{
+	FString CurrentDirectory = FPlatformProcess::GetCurrentWorkingDirectory();
+
+	// Log or use the current working directory
+	UE_LOG(LogTemp, Log, TEXT("Current working directory: %s"), *CurrentDirectory);
+
+	FString ContentFolderDir = FPaths::ProjectContentDir();
+
+	//FString FilePath(TEXT("./params.xml"));
+	FString params_path = filename;
+	FString FilePath = FPaths::Combine(*ContentFolderDir, *params_path);
+	UE_LOG(LogTemp, Log, TEXT("Params Path: %s"), *FilePath);
+
+
+	FXmlFile MyXml(FilePath, EConstructMethod::ConstructFromFile);
+
+	if (MyXml.GetRootNode())
+	{
+		const FXmlNode* RootNode = MyXml.GetRootNode();
+
+		const FString MyChildTag("points");
+		const FXmlNode* MyChildNode = RootNode->FindChildNode(MyChildTag);
+
+		const FXmlNode* paramElem = MyChildNode->FindChildNode(TEXT("point"));
+		FString value;
+
+		for (FXmlNode* point : MyChildNode->GetChildrenNodes())
+		{
+			value = paramElem->GetAttribute("x");
+			float x;
+			FDefaultValueHelper::ParseFloat(value, x);
+			value = paramElem->GetAttribute("y");
+			float z;
+			FDefaultValueHelper::ParseFloat(value, z);
+			path.points.Add(FVector(x, 0, z));
+		}
+	}
+	return true;
+}

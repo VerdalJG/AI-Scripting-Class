@@ -28,6 +28,7 @@ void AAICharacter::BeginPlay()
 	arrive = ArriveSteering::ArriveSteering();
 	align = AlignSteering::AlignSteering();
 	alignToMovement = AlignToMovementSteering::AlignToMovementSteering();
+	path = PathSteering::PathSteering();
 }
 
 // Called every frame
@@ -112,16 +113,7 @@ void AAICharacter::OnClickedRight(const FVector& mousePosition)
 
 void AAICharacter::DrawDebug()
 {
-	TArray<FVector> Points =
-	{
-		FVector(-800.f, 0.f, -450.f),
-		FVector(-400.f, 0.f, 0.f),
-		FVector(-100.f, 0.f, -200.f),
-		FVector(200.f, 0.f, 400.f),
-		FVector(700.f, 0.f, -300.f)
-	};
-
-	SetPath(this, TEXT("BP_Path"), TEXT("path"), Points, 5.0f, PathMaterial);
+	SetPath(this, TEXT("BP_Path"), TEXT("path"), points, 5.0f, PathMaterial);
 
 	SetCircle(circle, TEXT("targetPosition"), m_params.targetPosition, m_params.dest_radius);
 	SetArrow(this, TEXT("linear_acceleration"), acceleration, acceleration.Length());

@@ -17,6 +17,12 @@ struct Params
     float time_ahead;
 };
 
+struct Path
+{
+    TArray<FVector> points;
+};
+
 bool ReadParams(const char* filename, Params& params);
+bool ReadPath(const char* filename, Path& path);
 
 #endif

@@ -10,6 +10,7 @@
 #include "ArriveSteering.h"
 #include "AlignSteering.h"
 #include "AlignToMovementSteering.h"
+#include "PathSteering.h"
 
 #include "AICharacter.generated.h"
 
@@ -34,6 +35,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		UMaterialInterface* NavmeshMaterial;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* SeekMaterial;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -65,13 +69,22 @@ public:
 	float rotation;
 	float angularVelocity;
 	float angularAcceleration;
+	TArray<FVector> points =
+	{
+		FVector(-800.f, 0.f, -450.f),
+		FVector(-400.f, 0.f, 0.f),
+		FVector(-100.f, 0.f, -200.f),
+		FVector(200.f, 0.f, 400.f),
+		FVector(700.f, 0.f, 300.f)
+	};
 
 	enum class SteeringMode
 	{
 		Seek,
 		Arrive,
 		Align,
-		AlignToMovement
+		AlignToMovement,
+		Path
 	};
 
 
@@ -81,4 +94,5 @@ private:
 	ArriveSteering arrive;
 	AlignSteering align;
 	AlignToMovementSteering alignToMovement;
+	PathSteering path;
 };
