@@ -114,11 +114,11 @@ void AAICharacter::DrawDebug()
 {
 	TArray<FVector> Points =
 	{
-		FVector(0.f, 0.f, 0.f),
-		FVector(100.f, 0.f, 0.f),
-		FVector(100.f, 0.f, 100.f),
-		FVector(100.f, 0.f, 100.f),
-		FVector(0.f, 0.f, 100.f)
+		FVector(-800.f, 0.f, -450.f),
+		FVector(-400.f, 0.f, 0.f),
+		FVector(-100.f, 0.f, -200.f),
+		FVector(200.f, 0.f, 400.f),
+		FVector(700.f, 0.f, -300.f)
 	};
 
 	SetPath(this, TEXT("BP_Path"), TEXT("path"), Points, 5.0f, PathMaterial);
