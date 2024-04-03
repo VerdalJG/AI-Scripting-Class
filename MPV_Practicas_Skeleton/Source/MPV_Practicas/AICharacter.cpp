@@ -44,6 +44,7 @@ void AAICharacter::MoveAI(float DeltaTime)
 {
 	m_target.targetPosition = m_params.targetPosition;
 	m_target.targetRotation = m_params.targetRotation;
+	m_target.path = m_path.points;
 
 	FVector position = GetActorLocation();
 
@@ -55,12 +56,14 @@ void AAICharacter::MoveAI(float DeltaTime)
 		velocity.GetClampedToMaxSize(m_params.max_velocity);
 		position += velocity * DeltaTime;
 		break;
+
 	case SteeringMode::Arrive:
 		acceleration = arrive.GetSteering(this, m_target).linearAcceleration;
 		velocity += acceleration * DeltaTime;
 		velocity.GetClampedToMaxSize(m_params.max_velocity);
 		position += velocity * DeltaTime;
 		break;
+
 	case SteeringMode::Align:
 		angularAcceleration = align.GetSteering(this, m_target).angularAcceleration;
 		angularAcceleration = FMath::Clamp(angularAcceleration, -m_params.max_angular_acceleration, m_params.max_angular_acceleration);
@@ -68,18 +71,24 @@ void AAICharacter::MoveAI(float DeltaTime)
 		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
 		rotation += angularVelocity * DeltaTime;
 		break;
+
 	case SteeringMode::AlignToMovement:
-		SteeringValues a = alignToMovement.GetSteering(this, m_target);
-		acceleration = a.linearAcceleration;
+		SteeringValues values = alignToMovement.GetSteering(this, m_target);
+		acceleration = values.linearAcceleration;
 		velocity += acceleration * DeltaTime;
 		velocity.GetClampedToMaxSize(m_params.max_velocity);
 		position += velocity * DeltaTime;
 
-		angularAcceleration = a.angularAcceleration;
+		angularAcceleration = values.angularAcceleration;
 		angularAcceleration = FMath::Clamp(angularAcceleration, -m_params.max_angular_acceleration, m_params.max_angular_acceleration);
 		angularVelocity += angularAcceleration * DeltaTime;
 		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
 		rotation += angularVelocity * DeltaTime;
+		break;
+
+	case SteeringMode::Path:
+		SteeringValues values = path.GetSteering(this, m_target);
+
 		break;
 	}
 
@@ -113,7 +122,7 @@ void AAICharacter::OnClickedRight(const FVector& mousePosition)
 
 void AAICharacter::DrawDebug()
 {
-	SetPath(this, TEXT("BP_Path"), TEXT("path"), points, 5.0f, PathMaterial);
+	SetPath(this, TEXT("BP_Path"), TEXT("path"), m_path.points, 5.0f, PathMaterial);
 
 	SetCircle(circle, TEXT("targetPosition"), m_params.targetPosition, m_params.dest_radius);
 	SetArrow(this, TEXT("linear_acceleration"), acceleration, acceleration.Length());

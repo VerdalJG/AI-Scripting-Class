@@ -44,6 +44,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	Params m_params;
+	Path m_path;
 	TargetValues m_target;
 
 public:	
@@ -69,14 +70,6 @@ public:
 	float rotation;
 	float angularVelocity;
 	float angularAcceleration;
-	TArray<FVector> points =
-	{
-		FVector(-800.f, 0.f, -450.f),
-		FVector(-400.f, 0.f, 0.f),
-		FVector(-100.f, 0.f, -200.f),
-		FVector(200.f, 0.f, 400.f),
-		FVector(700.f, 0.f, 300.f)
-	};
 
 	enum class SteeringMode
 	{
