@@ -14,6 +14,10 @@
 
 #include "AICharacter.generated.h"
 
+#define print(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT(x));}
+
+#define printf(x, ...) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT(x), __VA_ARGS__));}
+
 UCLASS()
 class MPV_PRACTICAS_API AAICharacter : public APawn
 {
@@ -44,7 +48,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	Params m_params;
+
 	Path m_path;
+
 	TargetValues m_target;
 
 public:	

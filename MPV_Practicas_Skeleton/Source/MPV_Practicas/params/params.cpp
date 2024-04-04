@@ -123,15 +123,14 @@ bool ReadPath(const char* filename, Path& path)
 		const FString MyChildTag("points");
 		const FXmlNode* MyChildNode = RootNode->FindChildNode(MyChildTag);
 
-		const FXmlNode* paramElem = MyChildNode->FindChildNode(TEXT("point"));
 		FString value;
 
 		for (FXmlNode* point : MyChildNode->GetChildrenNodes())
 		{
-			value = paramElem->GetAttribute("x");
+			value = point->GetAttribute("x");
 			float x;
 			FDefaultValueHelper::ParseFloat(value, x);
-			value = paramElem->GetAttribute("y");
+			value = point->GetAttribute("y");
 			float z;
 			FDefaultValueHelper::ParseFloat(value, z);
 			path.points.Add(FVector(x, 0, z));

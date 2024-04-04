@@ -83,18 +83,18 @@ void AAICharacter::MoveAI(float DeltaTime)
 
 		case SteeringMode::AlignToMovement:
 		{
-		SteeringValues values = alignToMovement.GetSteering(this, m_target);
-		acceleration = values.linearAcceleration;
-		velocity += acceleration * DeltaTime;
-		velocity.GetClampedToMaxSize(m_params.max_velocity);
-		position += velocity * DeltaTime;
-
-		angularAcceleration = values.angularAcceleration;
-		angularAcceleration = FMath::Clamp(angularAcceleration, -m_params.max_angular_acceleration, m_params.max_angular_acceleration);
-		angularVelocity += angularAcceleration * DeltaTime;
-		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
-		rotation += angularVelocity * DeltaTime;
-		break;
+			SteeringValues values = alignToMovement.GetSteering(this, m_target);
+			acceleration = values.linearAcceleration;
+			velocity += acceleration * DeltaTime;
+			velocity.GetClampedToMaxSize(m_params.max_velocity);
+			position += velocity * DeltaTime;
+	
+			angularAcceleration = values.angularAcceleration;
+			angularAcceleration = FMath::Clamp(angularAcceleration, -m_params.max_angular_acceleration, m_params.max_angular_acceleration);
+			angularVelocity += angularAcceleration * DeltaTime;
+			angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
+			rotation += angularVelocity * DeltaTime;
+			break;
 		}
 		
 
