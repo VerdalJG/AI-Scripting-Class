@@ -21,8 +21,9 @@ void AAICharacter::BeginPlay()
 	Super::BeginPlay();
 
 	ReadParams("params.xml", m_params);
+	ReadPath("path.xml", m_path);
 
-	steeringMode = SteeringMode::AlignToMovement;
+	steeringMode = SteeringMode::Path;
 
 	seek = SeekSteering::SeekSteering();
 	arrive = ArriveSteering::ArriveSteering();
@@ -50,29 +51,38 @@ void AAICharacter::MoveAI(float DeltaTime)
 
 	switch (steeringMode)
 	{
-	case SteeringMode::Seek:
-		acceleration = seek.GetSteering(this, m_target).linearAcceleration;
-		velocity += acceleration * DeltaTime;
-		velocity.GetClampedToMaxSize(m_params.max_velocity);
-		position += velocity * DeltaTime;
-		break;
+		case SteeringMode::Seek:
+		{
+			acceleration = seek.GetSteering(this, m_target).linearAcceleration;
+			velocity += acceleration * DeltaTime;
+			velocity.GetClampedToMaxSize(m_params.max_velocity);
+			position += velocity * DeltaTime;
+			break;
+		}
+		
+		case SteeringMode::Arrive:
+		{
+			acceleration = arrive.GetSteering(this, m_target).linearAcceleration;
+			velocity += acceleration * DeltaTime;
+			velocity.GetClampedToMaxSize(m_params.max_velocity);
+			position += velocity * DeltaTime;
+			break;
+		}
+		
 
-	case SteeringMode::Arrive:
-		acceleration = arrive.GetSteering(this, m_target).linearAcceleration;
-		velocity += acceleration * DeltaTime;
-		velocity.GetClampedToMaxSize(m_params.max_velocity);
-		position += velocity * DeltaTime;
-		break;
+		case SteeringMode::Align:
+		{
+			angularAcceleration = align.GetSteering(this, m_target).angularAcceleration;
+			angularAcceleration = FMath::Clamp(angularAcceleration, -m_params.max_angular_acceleration, m_params.max_angular_acceleration);
+			angularVelocity += angularAcceleration * DeltaTime;
+			angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
+			rotation += angularVelocity * DeltaTime;
+			break;
+		}
+		
 
-	case SteeringMode::Align:
-		angularAcceleration = align.GetSteering(this, m_target).angularAcceleration;
-		angularAcceleration = FMath::Clamp(angularAcceleration, -m_params.max_angular_acceleration, m_params.max_angular_acceleration);
-		angularVelocity += angularAcceleration * DeltaTime;
-		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
-		rotation += angularVelocity * DeltaTime;
-		break;
-
-	case SteeringMode::AlignToMovement:
+		case SteeringMode::AlignToMovement:
+		{
 		SteeringValues values = alignToMovement.GetSteering(this, m_target);
 		acceleration = values.linearAcceleration;
 		velocity += acceleration * DeltaTime;
@@ -85,11 +95,20 @@ void AAICharacter::MoveAI(float DeltaTime)
 		angularVelocity = FMath::Clamp(angularVelocity, -m_params.max_angular_velocity, m_params.max_angular_velocity);
 		rotation += angularVelocity * DeltaTime;
 		break;
+		}
+		
 
-	case SteeringMode::Path:
-		SteeringValues values = path.GetSteering(this, m_target);
+		case SteeringMode::Path:
+		{
+			SteeringValues values = path.GetSteering(this, m_target);
+			acceleration = values.linearAcceleration;
+			velocity += acceleration * DeltaTime;
+			velocity.GetClampedToMaxSize(m_params.max_velocity);
+			position += velocity * DeltaTime;
 
-		break;
+			break;
+		}
+		
 	}
 
 	FVector rotationVector = FVector(0, rotation, 0);

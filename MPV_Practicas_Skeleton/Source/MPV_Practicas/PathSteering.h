@@ -9,7 +9,7 @@
 
 struct PathValues
 {
-	float nearestX, nearestY;
+	FVector nearestPoint;
 	float squaredDistance;
 	int currentPoint;
 };
@@ -22,6 +22,7 @@ public:
 	virtual SteeringValues GetSteering(AActor* actor, TargetValues target) override;
 	PathValues GetNearestPointOnSegment(FVector actorPosition, TArray<FVector> points);
 	PathValues PointSegmentDistance(FVector point, FVector v1, FVector v2);
+	FVector GetFuturePoint(PathValues& pathValues, TArray<FVector>& points, float lookAhead);
 	PathSteering();
 	virtual ~PathSteering() override;
 
