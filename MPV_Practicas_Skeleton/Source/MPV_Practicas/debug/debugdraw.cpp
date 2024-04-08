@@ -178,7 +178,6 @@ void SetPath(const AActor* owner, const FString& path_actor_name, const FString&
             // Calculate UVs and normals (for simplicity, UVs and normals are calculated per vertex)
             for (int32 j = 0; j < 4; ++j)
             {
-                printf("I GOT HERE : %f", PathPoints[0].X)
                 UVs.Add(FVector2D((float)j / 4, 0)); // Linear UV mapping along path
                 Normals.Add(Direction); // Use the same normal for all vertices
             }

@@ -12,6 +12,13 @@ struct PathValues
 	FVector nearestPoint;
 	float squaredDistance;
 	int currentPoint;
+
+	PathValues()
+	{
+		nearestPoint = FVector(0, 0, 0);
+		squaredDistance = 0;
+		currentPoint = 0;
+	}
 };
 /**
  * 

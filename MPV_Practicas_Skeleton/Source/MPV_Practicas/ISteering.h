@@ -9,13 +9,14 @@ struct SteeringValues
 {
 	FVector linearAcceleration = FVector::Zero();
 	float angularAcceleration = 0.0f;
+	FVector nearestPointOnPath;
+	FVector seekTarget;
 };
 
 struct TargetValues
 {
 	FVector targetPosition = FVector::Zero();
 	float targetRotation = 0.0f;
-	TArray<FVector> path;
 };
 
 class MPV_PRACTICAS_API ISteering

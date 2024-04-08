@@ -23,7 +23,6 @@ void AAICharacter::BeginPlay()
 	ReadParams("params.xml", m_params);
 	ReadPath("path.xml", m_path);
 
-	steeringMode = SteeringMode::Path;
 
 	seek = SeekSteering::SeekSteering();
 	arrive = ArriveSteering::ArriveSteering();
@@ -45,7 +44,6 @@ void AAICharacter::MoveAI(float DeltaTime)
 {
 	m_target.targetPosition = m_params.targetPosition;
 	m_target.targetRotation = m_params.targetRotation;
-	m_target.path = m_path.points;
 
 	FVector position = GetActorLocation();
 
@@ -101,6 +99,8 @@ void AAICharacter::MoveAI(float DeltaTime)
 		case SteeringMode::Path:
 		{
 			SteeringValues values = path.GetSteering(this, m_target);
+			m_path.nearestPointOnPath = values.nearestPointOnPath;
+			m_path.seekTarget = values.seekTarget;
 			acceleration = values.linearAcceleration;
 			velocity += acceleration * DeltaTime;
 			velocity.GetClampedToMaxSize(m_params.max_velocity);
@@ -142,8 +142,9 @@ void AAICharacter::OnClickedRight(const FVector& mousePosition)
 void AAICharacter::DrawDebug()
 {
 	SetPath(this, TEXT("BP_Path"), TEXT("path"), m_path.points, 5.0f, PathMaterial);
-
-	SetCircle(circle, TEXT("targetPosition"), m_params.targetPosition, m_params.dest_radius);
+	SetCircle(targetCircle, TEXT("targetPosition"), m_params.targetPosition, m_params.dest_radius);
+	SetCircle(nearPointCircle, TEXT("NearTarget"), m_path.nearestPointOnPath, m_params.dest_radius);
+	SetCircle(seekTargetCircle, TEXT("SeekTarget"), m_path.seekTarget, m_params.dest_radius);
 	SetArrow(this, TEXT("linear_acceleration"), acceleration, acceleration.Length());
 	SetArrow(this, TEXT("linear_velocity"), velocity, velocity.Length());
 

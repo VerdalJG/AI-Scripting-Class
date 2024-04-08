@@ -14,9 +14,19 @@
 
 #include "AICharacter.generated.h"
 
-#define print(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT(x));}
+#define print(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(x));}
 
-#define printf(x, ...) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT(x), __VA_ARGS__));}
+#define printf(x, ...) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Red, FString::Printf(TEXT(x), __VA_ARGS__));}
+
+UENUM(BlueprintType)
+enum class SteeringMode
+{
+	Seek,
+	Arrive,
+	Align,
+	AlignToMovement,
+	Path
+};
 
 UCLASS()
 class MPV_PRACTICAS_API AAICharacter : public APawn
@@ -32,16 +42,25 @@ public:
 	uint32 bDoMovement : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AIChar)
-	AActor* circle;
+	AActor* targetCircle;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AIChar)
+	AActor* nearPointCircle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AIChar)
+	AActor* seekTargetCircle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AIChar)
 		UMaterialInterface* PathMaterial;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AIChar)
 		UMaterialInterface* NavmeshMaterial;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AIChar)
 		UMaterialInterface* SeekMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AIChar)
+		SteeringMode steeringMode;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -68,6 +87,7 @@ public:
 	void OnClickedRight(const FVector& mousePosition);
 	
 	const Params& GetParams() const { return m_params; }
+	const Path& GetPath() const { return m_path; }
 
 	void DrawDebug();
 
@@ -77,18 +97,13 @@ public:
 	float angularVelocity;
 	float angularAcceleration;
 
-	enum class SteeringMode
-	{
-		Seek,
-		Arrive,
-		Align,
-		AlignToMovement,
-		Path
-	};
+	
+
+
 
 
 private:
-	SteeringMode steeringMode;
+
 	SeekSteering seek;
 	ArriveSteering arrive;
 	AlignSteering align;

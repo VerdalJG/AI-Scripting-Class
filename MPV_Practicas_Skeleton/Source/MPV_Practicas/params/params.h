@@ -20,6 +20,8 @@ struct Params
 struct Path
 {
     TArray<FVector> points;
+    FVector nearestPointOnPath;
+    FVector seekTarget;
 };
 
 bool ReadParams(const char* filename, Params& params);
