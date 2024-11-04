@@ -11,6 +11,8 @@
 #include "AlignSteering.h"
 #include "AlignToMovementSteering.h"
 #include "PathSteering.h"
+#include "PathObstacleAvoidanceSteering.h"
+#include "Pathfinder.h"
 
 #include "AICharacter.generated.h"
 
@@ -25,7 +27,9 @@ enum class SteeringMode
 	Arrive,
 	Align,
 	AlignToMovement,
-	Path
+	Path,
+	PathObstacleAvoidance,
+	Pathfinder
 };
 
 UCLASS()
@@ -70,6 +74,10 @@ protected:
 
 	Path m_path;
 
+	TArray<Obstacle> m_obstacles;
+
+	Grid m_grid;
+
 	TargetValues m_target;
 
 public:	
@@ -88,6 +96,8 @@ public:
 	
 	const Params& GetParams() const { return m_params; }
 	const Path& GetPath() const { return m_path; }
+	const TArray<Obstacle>& GetObstacles() const { return m_obstacles; }
+	const Grid& GetGrid() const{ return m_grid; }
 
 	void DrawDebug();
 
@@ -97,16 +107,12 @@ public:
 	float angularVelocity;
 	float angularAcceleration;
 
-	
-
-
-
-
 private:
-
 	SeekSteering seek;
 	ArriveSteering arrive;
 	AlignSteering align;
 	AlignToMovementSteering alignToMovement;
 	PathSteering path;
+	PathObstacleAvoidanceSteering avoidance;
+	Pathfinder pathfinder;
 };

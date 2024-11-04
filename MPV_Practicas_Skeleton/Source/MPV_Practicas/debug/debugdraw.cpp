@@ -81,17 +81,25 @@ AActor* GetActorByLabel(const AActor* owner, const FString& label)
     return NULL;
 }
 
-void SetCircle(const AActor* owner, const FString& circle_name, const FVector& position, float radius)
+void SetCircle(const AActor* owner, const FString& circle_name, const FVector& position, float radius, FLinearColor circleColor)
 {
     // Get Actor
     AActor* circle_actor = GetActorByLabel(owner, circle_name);
     if (!circle_actor)
         return;
 
+    APaperSpriteActor* spriteActor = Cast< APaperSpriteActor>(circle_actor);
+    if (!spriteActor) return;
+    
+    UPaperSpriteComponent* render_component = spriteActor->GetRenderComponent();
+    if (!render_component) return;
+
+    render_component->SetSpriteColor(circleColor);
+
     // Set position
     circle_actor->SetActorLocation(position);
 
-
+    
     // Calculate scale from radius
     float newscale = (radius * 2) / 100.0f;
     circle_actor->SetActorScale3D(FVector(newscale, newscale, newscale));

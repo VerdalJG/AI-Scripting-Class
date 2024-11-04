@@ -26,12 +26,14 @@ struct PathValues
 class MPV_PRACTICAS_API PathSteering : public ISteering
 {
 public:
+	PathSteering();
+	virtual ~PathSteering() override;
+
 	virtual SteeringValues GetSteering(AActor* actor, TargetValues target) override;
 	PathValues GetNearestPointOnSegment(FVector actorPosition, TArray<FVector> points);
 	PathValues PointSegmentDistance(FVector point, FVector v1, FVector v2);
 	FVector GetFuturePoint(PathValues& pathValues, TArray<FVector>& points, float lookAhead);
-	PathSteering();
-	virtual ~PathSteering() override;
+
 
 private:
 	SeekSteering seek;
