@@ -1,0 +1,51 @@
+<map>
+	<creature>
+		<name> grifo </name>
+		<position>
+			<X> 200 </X>
+			<Y> 100 </Y>
+		</position>
+	</creature>
+	<creature>
+		<name> mago </name>
+		<position>
+			<X> 100 </X>
+			<Y> 200 </Y>
+		</position>
+	</creature>
+	<creature>
+		<name> mago </name>
+		<position>
+			<X> 100 </X>
+			<Y> 400 </Y>
+		</position>
+	</creature>
+	<creature>
+		<name> peon </name>
+		<position>
+			<X> 400 </X>
+			<Y> 100 </Y>
+		</position>
+	</creature>
+	<creature>
+		<name> dragon </name>
+		<position>
+			<X> 400 </X>
+			<Y> 400 </Y>
+		</position>
+	</creature>
+	<creature>
+		<name> dragon </name>
+		<position>
+			<X> 600 </X>
+			<Y> 400 </Y>
+		</position>
+	</creature>
+	<creature>
+		<name> dragon </name>
+		<position>
+			<X> 800 </X>
+			<Y> 400 </Y>
+		</position>
+	</creature>
+</map>

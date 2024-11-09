@@ -1,0 +1,7 @@
+<creatures>
+	<creatures name="dragon" texture="creatures/dragon.png" sizeX="128" sizeY="128"></creatures>
+	<creatures name="mage" texture="creatures/mage.png" sizeX="64" sizeY="64"></creatures>
+	<creatures name="peon" texture="creatures/peon.png" sizeX="32" sizeY="32"></creatures>
+	<creatures name="grunt" texture="creatures/grunt.png" sizeX="72" sizeY="72"></creatures>
+	<creatures name="gryphon" texture="creatures/gryphon.png" sizeX="92" sizeY="92"></creatures>
+</creatures>

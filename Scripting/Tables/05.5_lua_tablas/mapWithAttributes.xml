@@ -1,0 +1,9 @@
+<map>
+	<creature name="gryphon" positionX="200" positionY="100"></creature>
+	<creature name="mage" positionX="100" positionY="200"></creature>
+	<creature name="mage" positionX="100" positionY="400"></creature>
+	<creature name="peon" positionX="400" positionY="100"></creature>
+	<creature name="dragon" positionX="400" positionY="400"></creature>
+	<creature name="dragon" positionX="600" positionY="400"></creature>
+	<creature name="dragon" positionX="800" positionY="400"></creature>
+</map>
